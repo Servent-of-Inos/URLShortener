@@ -1,4 +1,12 @@
-require('./bootstrap');
+/**
+ * load vue, axios, toastr
+ */
+
+import Vue from 'vue'
+
+import axios from 'axios'
+
+import toastr from 'toastr'
 
 import datepicker from 'vue-date'
 
@@ -25,20 +33,22 @@ const App = new Vue({
 	},
 
 	components: { datepicker },
+
+	delimiters: ['${', '}'],
 	
 	methods: {
 
 		getUrlList() {
 
-			let urlContacts = 'urls';
+			let url = '/urls';
 
-			axios.get(urlContacts).then(response => {
+			axios.get(url).then(response => {
 
-				this.contacts = response.data;
+				this.urls = response.data;
 			});
 		},
 
-		getContact(contact) {
+		getUrl(contact) {
 
 
 			this.fillContact.id = contact.id;
@@ -70,7 +80,7 @@ const App = new Vue({
 
 			axios.put(url, this.fillContact).then(response => {
 
-				this.getContacts();
+				this.getUrlList();
 				this.fillContact = {'id': '', 'name': '', 'surname': '', 'email': '', 'phone_number': '', 'birthday': ''};
 				this.errors	  = [];
 
@@ -89,7 +99,7 @@ const App = new Vue({
 
 			axios.delete(url).then(response => { 
 
-				this.getContacts();
+				this.getUrlList();
 
 				toastr.success('Contact successfuly deleted!');
 			});
@@ -110,7 +120,7 @@ const App = new Vue({
 						birthday: this.newContact.birthday
 					}
 				}).then(response => {
-				this.getContacts();
+				this.getUrlList();
 				this.newContact = [];
 				this.errors = [];
 

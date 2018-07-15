@@ -16,15 +16,12 @@
 
 				<div class="modal-body">
 					<label for="name">Short Url</label>
-					<input type="text" name="url" class="form-control" v-model="newContact.name" placeholder="Name:">
-
-
-					
+					<input type="text" name="url" class="form-control" v-model="newUrl.long_url" placeholder="Name:">	
 					<input type="text" name="surname" class="form-control" v-model="newContact.surname" placeholder="Surname:">
 					<input type="text" name="email" class="form-control" v-model="newContact.email" placeholder="Email:">
 					<input type="text" name="phone_number" class="form-control" v-model="newContact.phone_number" placeholder="Phone number:">
 					<datepicker name = "birthday" v-model="newContact.birthday"></datepicker>
-					<span v-for="error in errors" class="text-danger">@{{ error }}</span>
+					<span v-for="error in errors" class="text-danger">${ error }</span>
 				</div>
 
 				<div class="modal-footer">

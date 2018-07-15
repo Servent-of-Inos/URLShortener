@@ -4,6 +4,11 @@ namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+use App\Entity\Url;
 
 class UrlShortenerController extends Controller
 {
@@ -12,7 +17,7 @@ class UrlShortenerController extends Controller
      */
     public function index()
     {
-        return $this->render('url_shortner/index.html.twig');
+        return $this->render('url_shortener/index.html.twig');
     }
 
      /**
