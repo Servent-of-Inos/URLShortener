@@ -2,13 +2,16 @@
  * load vue, axios, toastr
  */
 
-import Vue from 'vue'
-
 import axios from 'axios'
 
-import toastr from 'toastr'
+import Vue from 'vue'
 
-import datepicker from 'vue-date'
+import datepicker from 'vue2-datepicker'
+
+import BootstrapVue from 'bootstrap-vue'
+
+Vue.use(BootstrapVue);
+
 
 /**
  * Create a fresh Vue application instance.
@@ -27,8 +30,9 @@ const App = new Vue({
 	data: {
 
 		urls: [],
-		newContact: {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': ''},
-		fillContact: {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': ''},
+		newUrl: {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': ''},
+		fillUrl: {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': ''},
+
 		errors: []
 	},
 
@@ -49,7 +53,6 @@ const App = new Vue({
 		},
 
 		getUrl(contact) {
-
 
 			this.fillContact.id = contact.id;
 			this.fillContact.name = contact.name;
@@ -107,7 +110,7 @@ const App = new Vue({
 
 		makeShortUrl() {
 
-			let url = 'contacts';
+			let url = '/add-url';
 
 			axios({
 					method: 'post',
@@ -131,6 +134,20 @@ const App = new Vue({
 			}).catch(error => {
 				this.errors = error.response.data
 			});
+		},
+
+		onReset(evt) {
+
+		    evt.preventDefault();
+		    /* Reset our form values */
+		    this.form.email = '';
+		    this.form.name = '';
+		    this.form.food = null;
+		    this.form.checked = [];
+		    /* Trick to reset/clear native browser form validation state */
+		    this.show = false;
+		    this.$nextTick(() => { this.show = true });
 		}
+
 	}
 });

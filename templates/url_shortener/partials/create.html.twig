@@ -1,34 +1,38 @@
-<form method="POST" v-on:submit.prevent="addUrl">
-	
-	<div class="modal fade" id="create">
-		<div class="modal-dialog">
-			<div class="modal-content">
+<b-modal :ok-only ="true" id="create" title="Specify some information:">
 
-				<div class="modal-header">
+    <b-form @submit="makeShortUrl" @reset="onReset">
+	    <b-form-group id="UrlInputGroup"
+		                label="Url:"
+		                label-for="UrlInput"
+		                description="Enter url you want to shorten">
+		    <b-form-input id="UrlInput"
+		                type="text"
+		                v-model="newUrl.long_url"
+		                required
+		                placeholder="example-site.com">
+		    </b-form-input>
+	    </b-form-group>
 
-					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span>
-					</button>
+	    <b-form-group id="LifetimeInputGroup"
+		                label="Lifetime of your url:"
+		                label-for="UrlInput"
+		                description="This field is optional, if empty your short link will work permanently">
+		               
+		    <datepicker 
+		    	name = "lifetime" v-model="newUrl.lifetime" 
+		    	lang="en" type="datetime" format="YYYY-MM-DD HH:mm:ss">
+		    </datepicker>
+	    </b-form-group>
 
-					<h4>Create</h4>
+	    <b-form-checkbox-group v-model="newUrl.is_active" id="ActiveCheck">
 
-				</div>
+	        <b-form-checkbox>Check if active</b-form-checkbox>
+	        
+        </b-form-checkbox-group>
 
-				<div class="modal-body">
-					<label for="name">Short Url</label>
-					<input type="text" name="url" class="form-control" v-model="newUrl.long_url" placeholder="Name:">	
-					<input type="text" name="surname" class="form-control" v-model="newContact.surname" placeholder="Surname:">
-					<input type="text" name="email" class="form-control" v-model="newContact.email" placeholder="Email:">
-					<input type="text" name="phone_number" class="form-control" v-model="newContact.phone_number" placeholder="Phone number:">
-					<datepicker name = "birthday" v-model="newContact.birthday"></datepicker>
-					<span v-for="error in errors" class="text-danger">${ error }</span>
-				</div>
+	        <b-button type="submit" variant="primary btn-sm">Submit</b-button>
+	      	<b-button type="reset" variant="danger btn-sm">Reset</b-button>
 
-				<div class="modal-footer">
-					<input type="submit" class="btn btn-primary" value="Add">
-				</div>
-				
-			</div>
-		</div>
-	</div>
-</form>
+    </b-form>
+
+</b-modal>

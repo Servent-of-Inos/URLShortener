@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\{JsonResponse, Request};
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
@@ -14,16 +14,17 @@ class UrlShortenerController extends Controller
 {
     /**
      * @Route("/", name="index")
-     */
+     * @Method("GET")
+    */
     public function index()
     {
         return $this->render('url_shortener/index.html.twig');
     }
 
-     /**
+    /**
      * @Route("/urls", name="urls")
      * @Method("GET")
-     */
+    */
     public function getUrlList()
     {
         $urls = $this->getDoctrine()
@@ -44,6 +45,29 @@ class UrlShortenerController extends Controller
         }
 
         return new JsonResponse($arrayCollection);
+
+    }
+
+    /**
+     * @Route("/add-url", name="add-url")
+     * @Method("POST")
+    */
+    public function makeShortUrl()
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $url = new Url();
+        $product->setName('Keyboard');
+        $product->setPrice(1999);
+        $product->setDescription('Ergonomic and stylish!');
+
+        // tell Doctrine you want to (eventually) save the Product (no queries yet)
+        $entityManager->persist($product);
+
+        // actually executes the queries (i.e. the INSERT query)
+        $entityManager->flush();
+
+        return new Response('Saved new product with id '.$product->getId());
 
     }
 }
