@@ -19,32 +19,39 @@ class UrlRepository extends ServiceEntityRepository
         parent::__construct($registry, Url::class);
     }
 
-//    /**
-//     * @return Url[] Returns an array of Url objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
+    /**
+     * Transform given entity to array
+     *
+     * @param Url $url
+     *
+     * @return array
     */
+    public function transform(Url $url)
+    {
+        return [
+                'id'    => (int) $url->getId(),
+                'long_url' => (string) $url->getLongUrl(),
+                'short_url' => (string) $url->getShortUrl(),
+                'lifetime' => date_format($url->getLifetime(), 'd-m-Y H:i:s'),
+                'is_active' => (boolean) $url->getIsActive()
+        ];
+    }
 
-    /*
-    public function findOneBySomeField($value): ?Url
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
+    /**
+     * Transform given entity collection to array
+     *
+     * @return array
     */
+    public function transformAll()
+    {
+        $urls = $this->findAll();
+        $urlsArray = [];
+
+        foreach ($urls as $url) {
+            $urlsArray[] = $this->transform($url);
+        }
+
+        return $urlsArray;
+    }
+
 }

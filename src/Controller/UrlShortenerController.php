@@ -2,19 +2,39 @@
 
 namespace App\Controller;
 
+use App\Entity\Url;
+use App\Repository\UrlRepository;
+
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\{JsonResponse, Request};
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-
-use App\Entity\Url;
+use Doctrine\ORM\EntityManagerInterface;
 
 class UrlShortenerController extends Controller
 {
     /**
-     * @Route("/", name="index")
-     * @Method("GET")
+     * @var integer HTTP status code - 200 (OK) by default
+     */
+    protected $statusCode = 200;
+
+    /**
+     * Sets the value of statusCode.
+     *
+     * @param integer $statusCode the status code
+     *
+     * @return self
+     */
+    protected function setStatusCode($statusCode)
+    {
+        $this->statusCode = $statusCode;
+
+        return $this;
+    }
+
+    /**
+     * @Route("/", name="index", methods={"GET"})
     */
     public function index()
     {
@@ -22,52 +42,58 @@ class UrlShortenerController extends Controller
     }
 
     /**
-     * @Route("/urls", name="urls")
-     * @Method("GET")
+     * @Route("/urls", name="urls", methods={"GET"})
     */
-    public function getUrlList()
+    public function sendUrlList(UrlRepository $urlRepository)
     {
-        $urls = $this->getDoctrine()
-            ->getRepository(Url::class)
-            ->findAll();
+        $urls = $urlRepository->transformAll();
 
-        foreach($urls as $url) {
-
-            $arrayCollection[] = array(
-
-                'id' => $url->getId(),
-                'long_url' => $url->getLongUrl(),
-                'short_url' => $url->getShortUrl(),
-                'lifetime' => $url->getLifetime(),
-                'is_active' => $url->getIsActive()
-
-            );
-        }
-
-        return new JsonResponse($arrayCollection);
+        return new JsonResponse($urls);
 
     }
 
     /**
-     * @Route("/add-url", name="add-url")
-     * @Method("POST")
+     * @Route("/add-url", name="add-url", methods={"POST"})
     */
-    public function makeShortUrl()
+    public function makeShortUrl(Request $request, UrlRepository $urlRepository, EntityManagerInterface $em)
     {
-        $entityManager = $this->getDoctrine()->getManager();
+        $request = json_decode(
+            $request->getContent(),
+            true
+        );
 
-        $url = new Url();
-        $product->setName('Keyboard');
-        $product->setPrice(1999);
-        $product->setDescription('Ergonomic and stylish!');
 
-        // tell Doctrine you want to (eventually) save the Product (no queries yet)
-        $entityManager->persist($product);
+        if (!$request) {
+            return $this->respondValidationError('Please provide a valid request!');
+        }
 
-        // actually executes the queries (i.e. the INSERT query)
-        $entityManager->flush();
+        if (!$request['long_url']) {
+            return $this->respondValidationError('Please provide url!');
+        }
 
-        return new Response('Saved new product with id '.$product->getId());
+        $url = new Url;
+        $url->setLongUrl($request['long_url']);
+        $url->setShortUrl('blank.com');
+
+        if ($request['lifetime'] == '') {
+
+            $url->setLifetime(NULL);
+
+        } else {
+
+            $url->setLifetime(new \DateTime($request['lifetime']));
+
+        }
+
+        $url->setIsActive($request['is_active']);
+
+        $em->persist($url);
+        $em->flush();
+        
+        $this->setStatusCode(201);
+
+        return new JsonResponse($urlRepository->transform($url), $this->statusCode);
 
     }
+
 }

@@ -108,7 +108,7 @@ const App = new Vue({
 			});
 		},
 
-		makeShortUrl() {
+		sendLongUrl() {
 
 			let url = '/add-url';
 
@@ -116,20 +116,16 @@ const App = new Vue({
 					method: 'post',
 					url: url,
 					data: {
-						name: this.newContact.name,
-						surname: this.newContact.surname,
-						email: this.newContact.email,
-						phone_number: this.newContact.phone_number,
-						birthday: this.newContact.birthday
+						long_url: this.newUrl.long_url,
+						lifetime: this.newUrl.lifetime,
+						is_active: this.newUrl.is_active[0]
 					}
 				}).then(response => {
-				this.getUrlList();
-				this.newContact = [];
-				this.errors = [];
+					this.getUrlList();
+					this.newUrl = [];
+					this.errors = [];
 
-				$('#create').modal('hide');
-
-				toastr.success('New contact successfuly added!');
+				toastr.success('Your url was shortened!');
 
 			}).catch(error => {
 				this.errors = error.response.data
@@ -140,13 +136,13 @@ const App = new Vue({
 
 		    evt.preventDefault();
 		    /* Reset our form values */
-		    this.form.email = '';
-		    this.form.name = '';
-		    this.form.food = null;
-		    this.form.checked = [];
+		    this.newUrl.long_url = '';
+		    this.newUrl.lifetime = '';
+		    this.newUrl.is_active = false;
 		    /* Trick to reset/clear native browser form validation state */
 		    this.show = false;
 		    this.$nextTick(() => { this.show = true });
+
 		}
 
 	}
