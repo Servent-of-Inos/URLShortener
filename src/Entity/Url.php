@@ -22,7 +22,7 @@ class Url
     private $long_url;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $short_url;
 

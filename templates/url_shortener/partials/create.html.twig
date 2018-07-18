@@ -1,4 +1,4 @@
-<b-modal :ok-only ="true" id="create" title="Specify some information:">
+<b-modal :ok-only ="true" id="create" autocomplete="off" title="Specify some information:">
 
     <b-form @submit.prevent="sendLongUrl" @reset="onReset">
 	    <b-form-group id="UrlInputGroup"
@@ -6,7 +6,7 @@
 		                label-for="UrlInput"
 		                description="Enter url you want to shorten">
 		    <b-form-input id="UrlInput"
-		                type="text"
+		                type="url"
 		                v-model="newUrl.long_url"
 		                required
 		                placeholder="example-site.com">
@@ -26,7 +26,7 @@
 
 	    <b-form-checkbox-group v-model="newUrl.is_active" id="ActiveCheck">
 
-	        <b-form-checkbox>Check if active</b-form-checkbox>
+	        <b-form-checkbox>Check if you want activete your short link after creation</b-form-checkbox>
 	        
         </b-form-checkbox-group>
 

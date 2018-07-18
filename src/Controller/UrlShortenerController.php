@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Url;
 use App\Repository\UrlRepository;
+Use App\BijectiveFunction\Bijective;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\{JsonResponse, Request};
@@ -20,23 +21,9 @@ class UrlShortenerController extends Controller
     protected $statusCode = 200;
 
     /**
-     * Sets the value of statusCode.
-     *
-     * @param integer $statusCode the status code
-     *
-     * @return self
-     */
-    protected function setStatusCode($statusCode)
-    {
-        $this->statusCode = $statusCode;
-
-        return $this;
-    }
-
-    /**
      * @Route("/", name="index", methods={"GET"})
     */
-    public function index()
+    public function view()
     {
         return $this->render('url_shortener/index.html.twig');
     }
@@ -44,7 +31,7 @@ class UrlShortenerController extends Controller
     /**
      * @Route("/urls", name="urls", methods={"GET"})
     */
-    public function sendUrlList(UrlRepository $urlRepository)
+    public function index(UrlRepository $urlRepository)
     {
         $urls = $urlRepository->transformAll();
 
@@ -55,13 +42,12 @@ class UrlShortenerController extends Controller
     /**
      * @Route("/add-url", name="add-url", methods={"POST"})
     */
-    public function makeShortUrl(Request $request, UrlRepository $urlRepository, EntityManagerInterface $em)
+    public function store(Request $request, UrlRepository $urlRepository, EntityManagerInterface $entityManager)
     {
         $request = json_decode(
             $request->getContent(),
             true
         );
-
 
         if (!$request) {
             return $this->respondValidationError('Please provide a valid request!');
@@ -72,8 +58,8 @@ class UrlShortenerController extends Controller
         }
 
         $url = new Url;
+
         $url->setLongUrl($request['long_url']);
-        $url->setShortUrl('blank.com');
 
         if ($request['lifetime'] == '') {
 
@@ -85,14 +71,33 @@ class UrlShortenerController extends Controller
 
         }
 
-        $url->setIsActive($request['is_active']);
+        if (isset($request['is_active'])) {
 
-        $em->persist($url);
-        $em->flush();
+            $url->setIsActive($request['is_active']);
+
+        } else {
+
+            $url->setIsActive(false);
+
+        }
+
+        $entityManager->persist($url);
+
+        $entityManager->flush();
+
+        $bjf = new Bijective;
+
+        $shortUrl = $bjf->encode($url->getId());
+
+        $url->setShortUrl('http://loca.ly/'.$shortUrl);
+
+        $entityManager->persist($url);
+
+        $entityManager->flush();
         
-        $this->setStatusCode(201);
+        $this->statusCode=201;
 
-        return new JsonResponse($urlRepository->transform($url), $this->statusCode);
+        return new JsonResponse($request, $this->statusCode);
 
     }
 

@@ -32,7 +32,7 @@ class UrlRepository extends ServiceEntityRepository
                 'id'    => (int) $url->getId(),
                 'long_url' => (string) $url->getLongUrl(),
                 'short_url' => (string) $url->getShortUrl(),
-                'lifetime' => date_format($url->getLifetime(), 'd-m-Y H:i:s'),
+                'lifetime' => date_format($url->getLifetime(), 'd-m-Y H:i'),
                 'is_active' => (boolean) $url->getIsActive()
         ];
     }
