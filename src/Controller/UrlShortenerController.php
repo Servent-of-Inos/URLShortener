@@ -40,9 +40,29 @@ class UrlShortenerController extends Controller
     }
 
     /**
+     * @Route("/{slug}", name="show", methods={"GET"})
+    */
+    public function show(String $slug, UrlRepository $urlRepository, Bijective $bjf)
+    {
+        $id = $bjf->decode($slug);
+
+        $url = $urlRepository->find($id);
+
+        if (!$url) {
+            return $this->respondNotFound();
+        }
+
+        $url = $url->getLongUrl();
+
+        // redirects externally
+        return $this->redirect($url);
+
+    }
+
+    /**
      * @Route("/add-url", name="add-url", methods={"POST"})
     */
-    public function store(Request $request, UrlRepository $urlRepository, EntityManagerInterface $entityManager)
+    public function store(Request $request, UrlRepository $urlRepository, EntityManagerInterface $entityManager, Bijective $bjf)
     {
         $request = json_decode(
             $request->getContent(),
@@ -84,8 +104,6 @@ class UrlShortenerController extends Controller
         $entityManager->persist($url);
 
         $entityManager->flush();
-
-        $bjf = new Bijective;
 
         $shortUrl = $bjf->encode($url->getId());
 

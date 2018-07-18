@@ -2,9 +2,6 @@
 
 namespace App\BijectiveFunction;
 
-/**
- * @author Eric Chau <eriic.chau@gmail.com>
- */
 class BijectiveException extends \LogicException
 {
     public static function onZeroValueAsFirstChar(Bijective $bijective)
