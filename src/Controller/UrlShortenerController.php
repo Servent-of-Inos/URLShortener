@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Url;
 use App\Repository\UrlRepository;
-Use App\BijectiveFunction\Bijective;
+use App\BijectiveFunction\Bijective;
+use App\DatetimeChecker\DatetimeChecker;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\{JsonResponse, Request};
@@ -52,10 +53,18 @@ class UrlShortenerController extends Controller
             return $this->respondNotFound();
         }
 
-        $url = $url->getLongUrl();
+        if (DatetimeChecker::isExpire($url->getLifetime())){
 
-        // redirects externally
-        return $this->redirect($url);
+            return $this->render('url_shortener/partials/404.html.twig');
+
+        } else {
+
+            $url = $url->getLongUrl();
+
+            // redirects externally
+            return $this->redirect($url);
+
+        }
 
     }
 
@@ -115,7 +124,7 @@ class UrlShortenerController extends Controller
         
         $this->statusCode=201;
 
-        return new JsonResponse($request, $this->statusCode);
+        return new JsonResponse($urlRepository->transform($url), $this->statusCode);
 
     }
 
