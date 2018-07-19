@@ -7,7 +7,7 @@ namespace App\DatetimeChecker;
  */
 class DatetimeChecker
 {
-	public function isExpire(\DateTimeInterface $date)
+	public static function isExpire(\DateTimeInterface $date)
 	{
 		date_default_timezone_set('Europe/Kiev');
 

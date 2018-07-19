@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\{ArrayCollection,Collection};
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -35,6 +36,16 @@ class Url
      * @ORM\Column(type="boolean")
      */
     private $is_active;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\StatisticalRecord", mappedBy="url")
+     */
+    private $statisticalrecord;
+
+    public function __construct()
+    {
+        $this->statisticalrecord = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -85,6 +96,37 @@ class Url
     public function setIsActive(bool $is_active): self
     {
         $this->is_active = $is_active;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|StatisticalRecord[]
+     */
+    public function getStatisticalrecord(): Collection
+    {
+        return $this->statisticalrecord;
+    }
+
+    public function addStatisticalrecord(StatisticalRecord $statisticalrecord): self
+    {
+        if (!$this->statisticalrecord->contains($statisticalrecord)) {
+            $this->statisticalrecord[] = $statisticalrecord;
+            $statisticalrecord->setUrl($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStatisticalrecord(StatisticalRecord $statisticalrecord): self
+    {
+        if ($this->statisticalrecord->contains($statisticalrecord)) {
+            $this->statisticalrecord->removeElement($statisticalrecord);
+            // set the owning side to null (unless already changed)
+            if ($statisticalrecord->getUrl() === $this) {
+                $statisticalrecord->setUrl(null);
+            }
+        }
 
         return $this;
     }

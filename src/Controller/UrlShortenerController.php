@@ -18,7 +18,7 @@ class UrlShortenerController extends Controller
 {
     /**
      * @var integer HTTP status code - 200 (OK) by default
-     */
+    */
     protected $statusCode = 200;
 
     /**
@@ -50,19 +50,35 @@ class UrlShortenerController extends Controller
         $url = $urlRepository->find($id);
 
         if (!$url) {
-            return $this->respondNotFound();
+
+            $message='Not found!';
+
+            return $this->render('url_shortener/partials/404.html.twig', array(
+            'message' => $message));
+            
         }
 
         if (DatetimeChecker::isExpire($url->getLifetime())){
 
-            return $this->render('url_shortener/partials/404.html.twig');
+            $message='It seems the lifetime of this link has expired!';
 
-        } else {
+            return $this->render('url_shortener/partials/404.html.twig', array(
+            'message' => $message));
+
+        }
+
+        if ($url->getIsActive()) {
 
             $url = $url->getLongUrl();
 
             // redirects externally
             return $this->redirect($url);
+        } else {
+
+            $message='It seems the link you want to access is not active! You can activate it on the main page.';
+
+            return $this->render('url_shortener/partials/404.html.twig', array(
+            'message' => $message));
 
         }
 
