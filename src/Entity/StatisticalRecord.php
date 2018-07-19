@@ -13,49 +13,38 @@ class StatisticalRecord
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     */
+    */
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Url")
-     */
-    private $url;
-
-    /**
      * @ORM\Column(type="datetime")
-     */
+    */
     private $timestamp;
 
     /**
      * @ORM\Column(type="text")
-     */
+    */
     private $referrer;
 
     /**
      * @ORM\Column(type="text")
-     */
+    */
     private $ip;
 
     /**
      * @ORM\Column(type="text")
-     */
+    */
     private $browser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Url", inversedBy="statisticalrecord")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $url;
 
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function getUrl(): ?Url
-    {
-        return $this->url;
-    }
-
-    public function setUrl(?Url $url): self
-    {
-        $this->url = $url;
-
-        return $this;
     }
 
     public function getTimestamp(): ?\DateTimeInterface
@@ -102,6 +91,18 @@ class StatisticalRecord
     public function setBrowser(string $browser): self
     {
         $this->browser = $browser;
+
+        return $this;
+    }
+
+    public function getUrl(): ?Url
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?Url $url): self
+    {
+        $this->url = $url;
 
         return $this;
     }

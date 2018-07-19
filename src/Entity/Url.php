@@ -2,7 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\{ArrayCollection,Collection};
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,27 +15,27 @@ class Url
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     */
+    */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     */
+    */
     private $long_url;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    */
     private $short_url;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     */
+    */
     private $lifetime;
 
     /**
      * @ORM\Column(type="boolean")
-     */
+    */
     private $is_active;
 
     /**

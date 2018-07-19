@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Url;
+use App\Entity\{Url, StatisticalRecord};
 use App\Repository\UrlRepository;
 use App\BijectiveFunction\Bijective;
 use App\DatetimeChecker\DatetimeChecker;
@@ -43,7 +43,7 @@ class UrlShortenerController extends Controller
     /**
      * @Route("/{slug}", name="show", methods={"GET"})
     */
-    public function show(String $slug, UrlRepository $urlRepository, Bijective $bjf)
+    public function show(String $slug, UrlRepository $urlRepository, EntityManagerInterface $entityManager, Bijective $bjf, Request $request)
     {
         $id = $bjf->decode($slug);
 
@@ -69,10 +69,31 @@ class UrlShortenerController extends Controller
 
         if ($url->getIsActive()) {
 
+            $timestamp = \DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
+            $referer = $request->server->get('HTTP_REFERER');
+            $ip = $request->server->get('REMOTE_ADDR');
+            $browser = $request->server->get('HTTP_USER_AGENT');
+
+            $statisticalRecord = new StatisticalRecord;
+
+            $statisticalRecord->setUrl($url);
+            $statisticalRecord->setTimestamp($timestamp);
+            $statisticalRecord->setReferrer($referer);
+            $statisticalRecord->setIp($ip);
+            $statisticalRecord->setBrowser($browser);
+
+            $entityManager->persist($statisticalRecord);
+
+            $url->addStatisticalrecord($statisticalRecord);
+
+            $entityManager->persist($url);
+            $entityManager->flush();
+
             $url = $url->getLongUrl();
 
             // redirects externally
             return $this->redirect($url);
+
         } else {
 
             $message='It seems the link you want to access is not active! You can activate it on the main page.';
