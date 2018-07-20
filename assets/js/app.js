@@ -33,6 +33,7 @@ const App = new Vue({
 		newUrl: {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': false},
 		fillStatistics: [],
 		fillStatisticRecord:{},
+		infFlag: false,
 		errors: []
 	},
 
@@ -88,7 +89,7 @@ const App = new Vue({
 
 				this.$toast.success({
     					title: 'Information',
-    					message: 'Link is activated!'
+    					message: 'Link status has changed!'
 				})
 
 			}).catch(error => {
@@ -138,6 +139,12 @@ const App = new Vue({
 		sendLongUrl() {
 
 			let url = '/add-url';
+
+			if (typeof this.newUrl.lifetime != 'undefined') {
+
+				this.newUrl.lifetime = null;
+
+			}
 
 			axios({
 					method: 'post',

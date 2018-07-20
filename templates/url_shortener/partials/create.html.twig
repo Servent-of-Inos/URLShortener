@@ -17,12 +17,16 @@
 	    <b-form-group id="LifetimeInputGroup"
 		                label="Lifetime of your url:"
 		                label-for="lifetime"
-		                description="This field is optional, if empty your short link will work permanently">
-		               
-		    <datepicker 
-		    	name = "lifetime" v-model="newUrl.lifetime" confirm
-		    	lang="en" type="datetime" format="YYYY-MM-DD HH:mm">
-		    </datepicker>
+		                description="This field is optional, if empty your short link will work permanently"
+		                >
+		    <b-form-checkbox-group v-model="infFlag" id="ActiveCheck">
+			    <b-form-checkbox>Uncheck if you want infinite link</b-form-checkbox>
+			</b-form-checkbox-group>
+
+			<datepicker v-if="infFlag" 
+				name = "lifetime" v-model="newUrl.lifetime" confirm
+				lang="en" type="datetime" format="YYYY-MM-DD HH:mm">
+			</datepicker>
 
 	    </b-form-group>
 
