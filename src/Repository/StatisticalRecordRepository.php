@@ -19,32 +19,15 @@ class StatisticalRecordRepository extends ServiceEntityRepository
         parent::__construct($registry, StatisticalRecord::class);
     }
 
-//    /**
-//     * @return StatisticalRecord[] Returns an array of StatisticalRecord objects
-//     */
-    /*
-    public function findByExampleField($value)
+    public static function transformRecord(StatisticalRecord $record)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return [
+                'id'    => (int) $record->getId(),
+                'timestamp' => date_format($record->getTimestamp(), 'd-m-Y H:i'),
+                'referrer' => (string) $record->getReferrer(),
+                'ip' => (string) $record->getIp(),
+                'browser' => (string) $record->getBrowser()         
+        ];
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?StatisticalRecord
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

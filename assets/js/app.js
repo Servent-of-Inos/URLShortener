@@ -10,6 +10,10 @@ import datepicker from 'vue2-datepicker'
 
 import BootstrapVue from 'bootstrap-vue'
 
+import VModal from 'vue-js-modal'
+
+Vue.use(VModal);
+
 Vue.use(BootstrapVue);
 
 
@@ -31,8 +35,8 @@ const App = new Vue({
 
 		urls: [],
 		newUrl: {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': ''},
-		fillUrl: {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': ''},
-
+		fillStatistics: [],
+		fillStatisticRecord:{},
 		errors: []
 	},
 
@@ -52,44 +56,42 @@ const App = new Vue({
 			});
 		},
 
-		getUrl(contact) {
+		showStatistics(statistics) {
 
-			this.fillContact.id = contact.id;
-			this.fillContact.name = contact.name;
-			this.fillContact.surname = contact.surname;
-			this.fillContact.email = contact.email;
-			this.fillContact.phone_number = contact.phone_number;
-			this.fillContact.birthday = contact.birthday;
+			this.fillStatistics = statistics;
 
-			$('#show').modal('show');
+			if (typeof statistics != 'undefined') {
+
+				this.$modal.show('statistics');
+
+			} else {
+
+				this.$modal.show('404-modal');
+
+			}
 
 		},
 
-		editUrlStatistics(contact) {
+		editUrlStatistics(record) {
 
-			this.fillContact.id = contact.id;
-			this.fillContact.name = contact.name;
-			this.fillContact.surname = contact.surname;
-			this.fillContact.email = contact.email;
-			this.fillContact.phone_number = contact.phone_number;
-			this.fillContact.birthday = contact.birthday;
+			this.fillStatisticRecord = record;
 
-			$('#edit').modal('show');
+			this.$refs.edit.show();
 		},
 
-		updateUrlStatistics(id) {
+		updateStatisticRecord(id) {
 
-			let url = 'contacts/' + id;
+			let url = '/statistical-record/' + id + '/edit';
 
-			axios.put(url, this.fillContact).then(response => {
+			axios.put(url, this.fillStatisticRecord).then(response => {
 
 				this.getUrlList();
-				this.fillContact = {'id': '', 'name': '', 'surname': '', 'email': '', 'phone_number': '', 'birthday': ''};
+				this.fillStatisticRecord = {};
 				this.errors	  = [];
 
-				$('#edit').modal('hide');
+				this.$refs.edit.hide();
 
-				toastr.success('Contact successfuly added!');
+				//toastr.success('Contact successfuly added!');
 
 			}).catch(error => {
 				this.errors = error.response.data
@@ -104,7 +106,7 @@ const App = new Vue({
 
 				this.getUrlList();
 
-				toastr.success('Contact successfuly deleted!');
+				//toastr.success('Contact successfuly deleted!');
 			});
 		},
 
@@ -125,7 +127,7 @@ const App = new Vue({
 					this.newUrl = [];
 					this.errors = [];
 
-				toastr.success('Your url was shortened!');
+				//toastr.success('Your url was shortened!');
 
 			}).catch(error => {
 				this.errors = error.response.data
@@ -139,6 +141,19 @@ const App = new Vue({
 		    this.newUrl.long_url = '';
 		    this.newUrl.lifetime = '';
 		    this.newUrl.is_active = false;
+		    /* Trick to reset/clear native browser form validation state */
+		    this.show = false;
+		    this.$nextTick(() => { this.show = true });
+
+		},
+
+		onResetEditStatisticRecord(evt) {
+		    /* Reset our form values */
+		    this.fillStatisticRecord.timestamp = '';
+		    this.fillStatisticRecord.referrer = '';
+		    this.fillStatisticRecord.ip = '';
+		    this.fillStatisticRecord.browser = '';
+		   
 		    /* Trick to reset/clear native browser form validation state */
 		    this.show = false;
 		    this.$nextTick(() => { this.show = true });

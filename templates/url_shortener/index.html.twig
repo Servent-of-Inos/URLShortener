@@ -30,11 +30,9 @@
 					<th>Short Url</th>
 					<th>Lifetime</th>
 					<th>Active</th>
-					<th colspan="2">
-						&nbsp;
-					</th>
+
 					<th>
-						<b-btn v-b-modal.create variant="primary btn-sm">Add Url</b-btn>
+						<b-btn v-b-modal.create variant="primary btn-sm">Add url</b-btn>
 					</th>
 					
 				</tr>
@@ -52,21 +50,7 @@
 	                <td><input type="checkbox" id="checkbox" v-model="url.is_active"></td>
 
 	                <td width="10px">
-						<a href="#" class="btn btn-success btn-sm" v-on:click.prevent="deleteUrl(url)">
-							View statistics
-						</a>
-					</td>
-
-					<td width="10px">
-						<a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="editUrlStatistics(url)">
-							Edit
-						</a>
-					</td>
-					                            
-					<td width="10px">
-						<a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="deleteUrl(url)">
-							Remove
-						</a>
+						<b-btn v-on:click.prevent="showStatistics(url.statistics)" variant="success btn-sm">View statistics</b-btn>
 					</td>
 				
 				</tr>
@@ -76,8 +60,9 @@
 		</table>
 
 		{{ include('url_shortener/partials/create.html.twig')}}
-		{#{{ include('url_shortener/partials/edit.html.twig')}}
-		{{ include('url_shortener/partials/show.html.twig')}} #}
+		{{ include('url_shortener/partials/show-statistics.html.twig')}}
+		{{ include('url_shortener/partials/edit.html.twig')}}
+		{{ include('url_shortener/partials/404-modal.html.twig')}}
 
 		</div>
 	</div>

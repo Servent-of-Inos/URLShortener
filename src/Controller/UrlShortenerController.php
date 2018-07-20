@@ -74,17 +74,17 @@ class UrlShortenerController extends Controller
             $ip = $request->server->get('REMOTE_ADDR');
             $browser = $request->server->get('HTTP_USER_AGENT');
 
-            $statisticalRecord = new StatisticalRecord;
+            $record = new StatisticalRecord;
 
-            $statisticalRecord->setUrl($url);
-            $statisticalRecord->setTimestamp($timestamp);
-            $statisticalRecord->setReferrer($referer);
-            $statisticalRecord->setIp($ip);
-            $statisticalRecord->setBrowser($browser);
+            $record->setUrl($url);
+            $record->setTimestamp($timestamp);
+            $record->setReferrer($referer);
+            $record->setIp($ip);
+            $record->setBrowser($browser);
 
-            $entityManager->persist($statisticalRecord);
+            $entityManager->persist($record);
 
-            $url->addStatisticalrecord($statisticalRecord);
+            $url->addStatisticalrecord($record);
 
             $entityManager->persist($url);
             $entityManager->flush();

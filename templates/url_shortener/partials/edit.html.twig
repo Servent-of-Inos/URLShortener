@@ -1,27 +1,54 @@
-<form method="POST" v-on:submit.prevent="updateUrlStatistics(fillContact.id)">
-	
-	<div class="modal fade" id="edit">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span>
-					</button>
-					<h4>Edit</h4>
-				</div>
-				<div class="modal-body">
-					<label for="description">Update Contact</label>
-					<input type="text" name="name" class="form-control" v-model="fillContact.name">
-					<input type="text" name="surname" class="form-control" v-model="fillContact.surname">
-					<input type="text" name="email" class="form-control" v-model="fillContact.email">
-					<input type="text" name="phone_number" class="form-control" v-model="fillContact.phone_number">
-					<input type="text" name="birthday" class="form-control" v-model="fillContact.birthday">
-					<span v-for="error in errors" class="text-danger">${ error }</span>
-				</div>
-				<div class="modal-footer">
-					<input type="submit" class="btn btn-primary" value="Update">
-				</div>
-			</div>
-		</div>
-	</div>
-</form>
+<b-modal ref= "edit" :ok-only ="true" id="edit" title="Edit statistics:">
+
+	<b-form @submit.prevent="updateStatisticRecord" @reset="onResetEditStatisticRecord" autocomplete="off">
+
+		 <b-form-group id="StatisticsTimestampInputGroup"
+		                label="Timestamp"
+		                label-for="StatisticsTimestampInput"
+		                description="Enter timestamp for statistical record:">
+		    <datepicker 
+		    	name = "StatisticsTimestampInput" v-model="fillStatisticRecord.timestamp" confirm
+		    	lang="en" type="datetime" format="YYYY-MM-DD HH:mm">
+		    </datepicker>
+
+		</b-form-group>
+
+		<b-form-group id="StatisticsReferrerInputGroup"
+		                label="Referrer"
+		                label-for="StatisticsReferrerInput"
+		                description="Enter referrer for statistical record:">
+		    <b-form-input id="StatisticsReferrerInput"
+		                type="url"
+		                v-model="fillStatisticRecord.referrer"
+		                required>
+		    </b-form-input>
+		</b-form-group>
+
+		<b-form-group id="StatisticsIpInputGroup"
+		                label="IP"
+		                label-for="StatisticsIpInput"
+		                description="Enter IP for statistical record:">
+		    <b-form-input id="StatisticsIpInput"
+		                type="text"
+		                v-model="fillStatisticRecord.ip"
+		                required>
+		    </b-form-input>
+		</b-form-group>
+
+		<b-form-group id="StatisticsBrowserInputGroup"
+		                label="Browser"
+		                label-for="StatisticsBrowserInput"
+		                description="Enter Browser for statistical record:">
+		    <b-form-input id="StatisticsBrowserInput"
+		                type="text"
+		                v-model="fillStatisticRecord.browser"
+		                required>
+		    </b-form-input>
+		</b-form-group>
+
+		<b-button type="submit" variant="primary btn-sm">Submit</b-button>
+	    <b-button type="reset" variant="danger btn-sm">Reset</b-button>
+
+	</b-form>
+
+</b-modal>

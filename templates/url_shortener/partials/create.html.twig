@@ -1,6 +1,7 @@
-<b-modal :ok-only ="true" id="create" autocomplete="off" title="Specify some information:">
+<b-modal ref= "create" :ok-only ="true" id="create" title="Specify some information:">
 
-    <b-form @submit.prevent="sendLongUrl" @reset="onReset">
+    <b-form @submit.prevent="sendLongUrl" @reset="onReset" autocomplete="off">
+    
 	    <b-form-group id="UrlInputGroup"
 		                label="Url:"
 		                label-for="UrlInput"
@@ -15,13 +16,14 @@
 
 	    <b-form-group id="LifetimeInputGroup"
 		                label="Lifetime of your url:"
-		                label-for="UrlInput"
+		                label-for="lifetime"
 		                description="This field is optional, if empty your short link will work permanently">
 		               
 		    <datepicker 
 		    	name = "lifetime" v-model="newUrl.lifetime" confirm
-		    	lang="en" type="datetime" format="YYYY-MM-DD HH:mm:ss">
+		    	lang="en" type="datetime" format="YYYY-MM-DD HH:mm">
 		    </datepicker>
+
 	    </b-form-group>
 
 	    <b-form-checkbox-group v-model="newUrl.is_active" id="ActiveCheck">

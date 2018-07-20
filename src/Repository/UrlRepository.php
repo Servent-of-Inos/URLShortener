@@ -22,16 +22,36 @@ class UrlRepository extends ServiceEntityRepository
     */
     public function transform(Url $url)
     {
-        $lol = $url->getStatisticalrecord();
+        $records = $url->getStatisticalrecord();
 
-        return [
-                'id'    => (int) $url->getId(),
-                'long_url' => (string) $url->getLongUrl(),
-                'short_url' => (string) $url->getShortUrl(),
-                'lifetime' => date_format($url->getLifetime(), 'd-m-Y H:i'),
-                'is_active' => (boolean) $url->getIsActive(),
-                'statistics' => $lol
-        ];
+        foreach ($records as $record) {
+
+            $recordsArray[] = StatisticalRecordRepository::transformRecord($record);
+
+        }
+
+        if(isset($recordsArray)) {
+
+            return [
+                    'id'    => (int) $url->getId(),
+                    'long_url' => (string) $url->getLongUrl(),
+                    'short_url' => (string) $url->getShortUrl(),
+                    'lifetime' => date_format($url->getLifetime(), 'd-m-Y H:i'),
+                    'is_active' => (boolean) $url->getIsActive(),
+                    'statistics' => (array) $recordsArray
+            ];
+
+        } else {
+
+            return [
+                    'id'    => (int) $url->getId(),
+                    'long_url' => (string) $url->getLongUrl(),
+                    'short_url' => (string) $url->getShortUrl(),
+                    'lifetime' => date_format($url->getLifetime(), 'd-m-Y H:i'),
+                    'is_active' => (boolean) $url->getIsActive()
+            ];
+
+        }
     }
 
     /**
