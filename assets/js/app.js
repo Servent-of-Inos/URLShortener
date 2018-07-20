@@ -16,7 +16,6 @@ Vue.use(VModal);
 
 Vue.use(BootstrapVue);
 
-
 /**
  * Create a fresh Vue application instance.
  */
@@ -94,13 +93,13 @@ const App = new Vue({
 				//toastr.success('Contact successfuly added!');
 
 			}).catch(error => {
-				this.errors = error.response.data
+				this.errors = error.response
 			});
 		},
 
-		deleteUrl(contact) {
+		deleteStatisticRecord(id) {
 
-			let url = 'contacts/' + contact.id;
+			let url = '/statistical-record/delete/' + id;
 
 			axios.delete(url).then(response => { 
 
@@ -148,6 +147,8 @@ const App = new Vue({
 		},
 
 		onResetEditStatisticRecord(evt) {
+
+			evt.preventDefault();
 		    /* Reset our form values */
 		    this.fillStatisticRecord.timestamp = '';
 		    this.fillStatisticRecord.referrer = '';

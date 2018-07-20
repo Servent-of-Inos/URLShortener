@@ -19,16 +19,16 @@ class StatisticalRecordController extends Controller
     protected $statusCode = 200;
 
     /**
-     * @Route("/statistical-record/{id}/edit", name="edit")
+     * @Route("/statistical-record/{id}/edit", name="edit", methods={"PUT"})
      */
-    public function update(Request $request, $id, EntityManagerInterface $entityManager, StatisticalRecordRepository $statisticalRecordRepository)
+    public function update(Request $request, EntityManagerInterface $entityManager, StatisticalRecordRepository $statisticalRecordRepository)
     {
         $request = json_decode(
             $request->getContent(),
             true
         );
 
-        $record = $statisticalRecordRepository->find($id);
+        $record = $statisticalRecordRepository->find($request['id']);
 
         $record->setTimestamp(new \DateTime($request['timestamp']));
         $record->setReferrer($request['referrer']);
@@ -40,5 +40,20 @@ class StatisticalRecordController extends Controller
         $entityManager->flush();
 
         return new JsonResponse($statisticalRecordRepository->transformRecord($record), $this->statusCode);
+    }
+
+      /**
+     * @Route("/statistical-record/delete/{id}", name="delete", methods={"DELETE"})
+     */
+    public function destroy($id, EntityManagerInterface $entityManager, StatisticalRecordRepository $statisticalRecordRepository)
+    {
+
+        $record = $statisticalRecordRepository->find($id);
+
+        $entityManager->remove($record);
+
+        $entityManager->flush();
+
+        return new JsonResponse($id, $this->statusCode);
     }
 }
