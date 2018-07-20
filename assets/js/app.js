@@ -145,7 +145,7 @@ const App = new Vue({
 					data: {
 						long_url: this.newUrl.long_url,
 						lifetime: this.newUrl.lifetime,
-						is_active: this.newUrl.is_active
+						is_active: this.newUrl.is_active[0]
 					}
 				}).then(response => {
 					this.getUrlList();

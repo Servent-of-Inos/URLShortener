@@ -36,7 +36,7 @@ class UrlRepository extends ServiceEntityRepository
                     'id'    => (int) $url->getId(),
                     'long_url' => (string) $url->getLongUrl(),
                     'short_url' => (string) $url->getShortUrl(),
-                    'lifetime' => date_format($url->getLifetime(), 'd-m-Y H:i'),
+                    'lifetime' => ($url->getLifetime() !== NULL) ? date_format($url->getLifetime(), 'd-m-Y H:i') : NULL,
                     'is_active' => (boolean) $url->getIsActive(),
                     'statistics' => (array) $recordsArray
             ];
@@ -47,7 +47,7 @@ class UrlRepository extends ServiceEntityRepository
                     'id'    => (int) $url->getId(),
                     'long_url' => (string) $url->getLongUrl(),
                     'short_url' => (string) $url->getShortUrl(),
-                    'lifetime' => date_format($url->getLifetime(), 'd-m-Y H:i'),
+                    'lifetime' => ($url->getLifetime() !== NULL) ? date_format($url->getLifetime(), 'd-m-Y H:i') : NULL,
                     'is_active' => (boolean) $url->getIsActive()
             ];
 

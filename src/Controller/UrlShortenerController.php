@@ -139,7 +139,7 @@ class UrlShortenerController extends Controller
 
         $url->setLongUrl($request['long_url']);
 
-        if ($request['lifetime'] == '') {
+        if (!isset($request['lifetime'])) {
 
             $url->setLifetime(NULL);
 
