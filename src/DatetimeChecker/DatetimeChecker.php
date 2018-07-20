@@ -7,8 +7,15 @@ namespace App\DatetimeChecker;
  */
 class DatetimeChecker
 {
-	public static function isExpire(\DateTimeInterface $date)
+	public static function isExpire(?\DateTimeInterface $date)
 	{
+
+		if(!isset($date)){
+
+			return false;
+
+		} 
+
 		date_default_timezone_set('Europe/Kiev');
 
 		$date = date_format($date, 'd-m-Y H:i');

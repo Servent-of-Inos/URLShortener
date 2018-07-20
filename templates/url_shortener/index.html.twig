@@ -46,7 +46,8 @@
 					<td>${ url.id }</td>
 	                <td>${ url.long_url }</td>
 	                <td><a :href="url.short_url">${url.short_url}</a></td>
-	                <td>${ url.lifetime }</td>
+	                <td v-if="url.lifetime==null">&infin;</td>
+	                <td v-else>${ url.lifetime }</td>
 	                <td>
 	                	<input type="checkbox" id="checkbox" @change="urlActiveStatusChange(url)" v-model="url.is_active">
 	                </td>
