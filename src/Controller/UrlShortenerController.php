@@ -149,7 +149,16 @@ class UrlShortenerController extends Controller
 
         }
 
-        $url->setIsActive($request['is_active']);
+        // temporary if statement -  need to fix that bug, something weird in front-end checkbox=((((
+        if (isset($request['is_active'])) {
+
+            $url->setIsActive($request['is_active']);
+
+        } else {
+
+            $url->setIsActive(false);
+
+        }
 
         $entityManager->persist($url);
 
