@@ -1,19 +1,15 @@
 /**
  * load vue, axios, toastr
  */
-
 import axios from 'axios'
-
 import Vue from 'vue'
-
 import datepicker from 'vue2-datepicker'
-
 import BootstrapVue from 'bootstrap-vue'
-
 import VModal from 'vue-js-modal'
+import CxltToastr from 'cxlt-vue2-toastr'
 
+Vue.use(CxltToastr);
 Vue.use(VModal);
-
 Vue.use(BootstrapVue);
 
 /**
@@ -33,7 +29,8 @@ const App = new Vue({
 	data: {
 
 		urls: [],
-		newUrl: {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': ''},
+		fillUrl: {},
+		newUrl: {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': false},
 		fillStatistics: [],
 		fillStatisticRecord:{},
 		errors: []
@@ -78,6 +75,27 @@ const App = new Vue({
 			this.$refs.edit.show();
 		},
 
+		urlActiveStatusChange(url) {
+
+			let uri = '/urls/' + url.id + '/edit-is-active';
+
+			this.fillUrl = url;
+
+			axios.put(uri, this.fillUrl).then(response => {
+
+				this.getUrlList();
+				this.errors	  = [];
+
+				this.$toast.success({
+    					title: 'Information',
+    					message: 'Link is activated!'
+				})
+
+			}).catch(error => {
+				this.errors = error.response
+			});
+		},
+
 		updateStatisticRecord(id) {
 
 			let url = '/statistical-record/' + id + '/edit';
@@ -90,9 +108,13 @@ const App = new Vue({
 
 				this.$refs.edit.hide();
 
-				//toastr.success('Contact successfuly added!');
+				this.$toast.success({
+    					title: 'Information',
+    					message: 'This record updated!'
+				})
 
 			}).catch(error => {
+
 				this.errors = error.response
 			});
 		},
@@ -105,7 +127,11 @@ const App = new Vue({
 
 				this.getUrlList();
 
-				//toastr.success('Contact successfuly deleted!');
+				this.$toast.error({
+    				title: 'Information',
+    				message: 'Record was deleted'
+				})
+
 			});
 		},
 
@@ -119,17 +145,28 @@ const App = new Vue({
 					data: {
 						long_url: this.newUrl.long_url,
 						lifetime: this.newUrl.lifetime,
-						is_active: this.newUrl.is_active[0]
+						is_active: this.newUrl.is_active
 					}
 				}).then(response => {
 					this.getUrlList();
-					this.newUrl = [];
+					this.newUrl = {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': false};
 					this.errors = [];
 
-				//toastr.success('Your url was shortened!');
+					this.$toast.success({
+    					title: 'Information',
+    					message: 'Your url successfully shortened!'
+					})
 
 			}).catch(error => {
-				this.errors = error.response.data
+
+				this.errors = error.response
+
+				this.$toast.error({
+    				title: 'Information',
+    				message: this.errors.data
+				})
+
+				console.log(this.errors.data);
 			});
 		},
 

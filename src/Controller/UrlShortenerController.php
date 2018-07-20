@@ -119,6 +119,18 @@ class UrlShortenerController extends Controller
             return $this->respondValidationError('Please provide a valid request!');
         }
 
+        $url = $urlRepository->findOneBy(array('long_url' => $request['long_url']));
+
+        if (isset($url)) {
+
+            $this->statusCode=419;
+
+            $message = json_encode(array('message' => 'This url already in database!'));
+
+            return new JsonResponse($message, $this->statusCode);
+
+        }
+
         if (!$request['long_url']) {
             return $this->respondValidationError('Please provide url!');
         }
@@ -137,15 +149,7 @@ class UrlShortenerController extends Controller
 
         }
 
-        if (isset($request['is_active'])) {
-
-            $url->setIsActive($request['is_active']);
-
-        } else {
-
-            $url->setIsActive(false);
-
-        }
+        $url->setIsActive($request['is_active']);
 
         $entityManager->persist($url);
 
@@ -163,6 +167,29 @@ class UrlShortenerController extends Controller
 
         return new JsonResponse($urlRepository->transform($url), $this->statusCode);
 
+    }
+
+    /**
+     * @Route("/urls/{id}/edit-is-active", name="edit-is-active", methods={"PUT"})
+    */
+    public function update(Int $id, Request $request, EntityManagerInterface $entityManager, UrlRepository $urlRepository)
+    {
+        $request = json_decode(
+            $request->getContent(),
+            true
+        );
+
+        $url = $urlRepository->find($id);
+
+        $url->setIsActive($request['is_active']);
+
+        $entityManager->persist($url);
+
+        $entityManager->flush();
+
+        $this->statusCode=201;
+
+        return new JsonResponse($request, $this->statusCode);
     }
 
 }
