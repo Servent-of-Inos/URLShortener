@@ -8,7 +8,7 @@ use App\BijectiveFunction\Bijective;
 use App\DatetimeChecker\DatetimeChecker;
 
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\{JsonResponse, Request};
+use Symfony\Component\HttpFoundation\{Response, JsonResponse, Request};
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -32,7 +32,7 @@ class UrlShortenerController extends Controller
     /**
      * @Route("/urls", name="urls", methods={"GET"})
     */
-    public function index(UrlRepository $urlRepository)
+    public function index(UrlRepository $urlRepository): JsonResponse
     {
         $urls = $urlRepository->transformAll();
 
@@ -43,7 +43,7 @@ class UrlShortenerController extends Controller
     /**
      * @Route("/{slug}", name="show", methods={"GET"})
     */
-    public function show(String $slug, UrlRepository $urlRepository, EntityManagerInterface $entityManager, Bijective $bjf, Request $request)
+    public function show(String $slug, UrlRepository $urlRepository, EntityManagerInterface $entityManager, Bijective $bjf, Request $request): Response
     {
         $id = $bjf->decode($slug);
 
@@ -108,7 +108,7 @@ class UrlShortenerController extends Controller
     /**
      * @Route("/add-url", name="add-url", methods={"POST"})
     */
-    public function store(Request $request, UrlRepository $urlRepository, EntityManagerInterface $entityManager, Bijective $bjf)
+    public function store(Request $request, UrlRepository $urlRepository, EntityManagerInterface $entityManager, Bijective $bjf): JsonResponse
     {
         $request = json_decode(
             $request->getContent(),
@@ -181,7 +181,7 @@ class UrlShortenerController extends Controller
     /**
      * @Route("/urls/{id}/edit-is-active", name="edit-is-active", methods={"PUT"})
     */
-    public function update(Int $id, Request $request, EntityManagerInterface $entityManager, UrlRepository $urlRepository)
+    public function update(Int $id, Request $request, EntityManagerInterface $entityManager, UrlRepository $urlRepository): JsonResponse
     {
         $request = json_decode(
             $request->getContent(),

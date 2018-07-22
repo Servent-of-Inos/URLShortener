@@ -37,7 +37,9 @@ const App = new Vue({
 		errors: []
 	},
 
-	components: { datepicker },
+	components: { 
+		datepicker 	
+	},
 
 	delimiters: ['${', '}'],
 	

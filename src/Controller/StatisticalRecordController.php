@@ -21,7 +21,7 @@ class StatisticalRecordController extends Controller
     /**
      * @Route("/statistical-record/{id}/edit", name="edit", methods={"PUT"})
      */
-    public function update(Request $request, EntityManagerInterface $entityManager, StatisticalRecordRepository $statisticalRecordRepository)
+    public function update(Request $request, EntityManagerInterface $entityManager, StatisticalRecordRepository $statisticalRecordRepository): JsonResponse
     {
         $request = json_decode(
             $request->getContent(),
@@ -45,7 +45,7 @@ class StatisticalRecordController extends Controller
       /**
      * @Route("/statistical-record/delete/{id}", name="delete", methods={"DELETE"})
      */
-    public function destroy($id, EntityManagerInterface $entityManager, StatisticalRecordRepository $statisticalRecordRepository)
+    public function destroy($id, EntityManagerInterface $entityManager, StatisticalRecordRepository $statisticalRecordRepository): JsonResponse
     {
 
         $record = $statisticalRecordRepository->find($id);
