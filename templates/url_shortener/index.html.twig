@@ -58,6 +58,13 @@
 				
 				</tr>
 
+				<pagination 
+      				:current="currentPage" 
+      				:total="totalUrls" 
+      				:per-page="perPage" 
+      				@page-changed="getUrlList">	
+      			</pagination>
+
 			</tbody>
 
 		</table>

@@ -8,7 +8,7 @@ use App\BijectiveFunction\Bijective;
 use App\DatetimeChecker\DatetimeChecker;
 
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\{Response, JsonResponse, Request};
+use Symfony\Component\HttpFoundation\{Request, Response, JsonResponse};
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -30,18 +30,30 @@ class UrlShortenerController extends Controller
     }
 
     /**
-     * @Route("/urls", name="urls", methods={"GET"})
+     * @Route("/urls", defaults={"page": "1"}, methods={"GET"}, name="urls_index")
+     * @Route("/urls/{page}", requirements={"page": "[1-9]\d*"}, methods={"GET"}, name="urls_index_paginated")
     */
-    public function index(UrlRepository $urlRepository): JsonResponse
+    public function index(int $page, UrlRepository $urlRepository): JsonResponse
     {
         $urls = $urlRepository->transformAll();
 
-        return new JsonResponse($urls);
+        $paginator = $urlRepository->createPaginator($urls, $page);
+
+        $totalUrls =  $paginator['total'];
+
+        $urlsChunk = $paginator['paginator']->getCurrentPageResults();
+
+        return new JsonResponse([
+
+            'urls' => $urlsChunk,
+            'totalUrls' => $totalUrls
+
+        ]);
 
     }
 
     /**
-     * @Route("/{slug}", name="show", methods={"GET"})
+     * @Route("/{slug}", methods={"GET"}, name="show")
     */
     public function show(String $slug, UrlRepository $urlRepository, EntityManagerInterface $entityManager, Bijective $bjf, Request $request): Response
     {
@@ -106,7 +118,7 @@ class UrlShortenerController extends Controller
     }
 
     /**
-     * @Route("/add-url", name="add-url", methods={"POST"})
+     * @Route("/add-url", methods={"POST"}, name="add-url")
     */
     public function store(Request $request, UrlRepository $urlRepository, EntityManagerInterface $entityManager, Bijective $bjf): JsonResponse
     {
@@ -179,7 +191,7 @@ class UrlShortenerController extends Controller
     }
 
     /**
-     * @Route("/urls/{id}/edit-is-active", name="edit-is-active", methods={"PUT"})
+     * @Route("/urls/{id}/edit-is-active", methods={"PUT"}, name="edit-is-active")
     */
     public function update(Int $id, Request $request, EntityManagerInterface $entityManager, UrlRepository $urlRepository): JsonResponse
     {

@@ -6,8 +6,16 @@ use App\Entity\Url;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
+
 class UrlRepository extends ServiceEntityRepository
-{
+{   
+    /**
+     * @var integer Url per page displayed
+    */
+    protected $maxPerPage = 3;
+
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Url::class);
@@ -20,7 +28,7 @@ class UrlRepository extends ServiceEntityRepository
      *
      * @return array
     */
-    public function transform(Url $url)
+    public function transform(Url $url): Array
     {
         $records = $url->getStatisticalrecord();
 
@@ -59,7 +67,7 @@ class UrlRepository extends ServiceEntityRepository
      *
      * @return array
     */
-    public function transformAll()
+    public function transformAll(): Array
     {
         $urls = $this->findAll();
         $urlsArray = [];
@@ -71,4 +79,23 @@ class UrlRepository extends ServiceEntityRepository
         return $urlsArray;
     }
 
+    /**
+     * Create pagination instance
+     *
+     * @return object
+    */
+    public function createPaginator(array $urls, int $page): Array
+    {
+        $paginator = new Pagerfanta(new ArrayAdapter($urls));
+        $total = $paginator->getNbResults();
+        $paginator->setMaxPerPage($this->maxPerPage);
+        $paginator->setCurrentPage($page);
+
+        return [
+
+            'paginator' => $paginator,
+            'total' => $total
+
+        ];
+    }
 }

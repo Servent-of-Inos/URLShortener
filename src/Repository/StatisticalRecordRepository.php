@@ -19,7 +19,14 @@ class StatisticalRecordRepository extends ServiceEntityRepository
         parent::__construct($registry, StatisticalRecord::class);
     }
 
-    public static function transformRecord(StatisticalRecord $record)
+    /**
+     * Transform given entity to array
+     *
+     * @param StatisticalRecord $record
+     *
+     * @return array
+    */
+    public static function transformRecord(StatisticalRecord $record): Array
     {
         return [
                 'id'    => (int) $record->getId(),

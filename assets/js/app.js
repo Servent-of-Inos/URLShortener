@@ -3,10 +3,13 @@
  */
 import axios from 'axios'
 import Vue from 'vue'
-import datepicker from 'vue2-datepicker'
+
 import BootstrapVue from 'bootstrap-vue'
 import VModal from 'vue-js-modal'
 import CxltToastr from 'cxlt-vue2-toastr'
+
+import datepicker from 'vue2-datepicker'
+import pagination from './components/pagination.vue'
 
 Vue.use(CxltToastr);
 Vue.use(VModal);
@@ -22,7 +25,7 @@ const App = new Vue({
 
 	created: function() {
 
-		this.getUrlList();
+		this.getUrlList(this.currentPage);
 
 	},
 
@@ -34,24 +37,32 @@ const App = new Vue({
 		fillStatistics: [],
 		fillStatisticRecord:{},
 		infFlag: false,
-		errors: []
+		errors: [],
+
+		//Information for pagination
+    	totalUrls: 0,
+    	perPage: 3,
+    	currentPage: 1
 	},
 
 	components: { 
-		datepicker 	
+		datepicker,
+		pagination 	
 	},
 
 	delimiters: ['${', '}'],
 	
 	methods: {
 
-		getUrlList() {
+		getUrlList(page) {
 
-			let url = '/urls';
+			let url = '/urls/' + page;
 
 			axios.get(url).then(response => {
 
-				this.urls = response.data;
+				this.urls = response.data.urls;
+				this.totalUrls = response.data.totalUrls;
+				this.currentPage = page;
 			});
 		},
 

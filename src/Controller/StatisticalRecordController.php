@@ -19,7 +19,7 @@ class StatisticalRecordController extends Controller
     protected $statusCode = 200;
 
     /**
-     * @Route("/statistical-record/{id}/edit", name="edit", methods={"PUT"})
+     * @Route("/statistical-record/{id}/edit", methods={"PUT"}, name="edit")
      */
     public function update(Request $request, EntityManagerInterface $entityManager, StatisticalRecordRepository $statisticalRecordRepository): JsonResponse
     {
@@ -43,7 +43,7 @@ class StatisticalRecordController extends Controller
     }
 
       /**
-     * @Route("/statistical-record/delete/{id}", name="delete", methods={"DELETE"})
+     * @Route("/statistical-record/delete/{id}", methods={"DELETE"}, name="delete")
      */
     public function destroy($id, EntityManagerInterface $entityManager, StatisticalRecordRepository $statisticalRecordRepository): JsonResponse
     {
