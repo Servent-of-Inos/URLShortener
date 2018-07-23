@@ -153,11 +153,11 @@ const App = new Vue({
 
 			let url = '/add-url';
 
-			// if (typeof this.newUrl.lifetime != 'undefined') {
+			if (!this.infFlag ) {
 
-			// 	this.newUrl.lifetime = null;
+				this.newUrl.lifetime = null;
 
-			// }
+			}
 
 			axios({
 					method: 'post',
@@ -216,6 +216,11 @@ const App = new Vue({
 		    this.show = false;
 		    this.$nextTick(() => { this.show = true });
 
+		},
+
+		onCheckLifetime(evt) {
+
+			this.infFlag = !this.infFlag;
 		}
 
 	}

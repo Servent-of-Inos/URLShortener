@@ -20,13 +20,16 @@
 		                description="This field is optional, if empty your short link will work permanently"
 		                >
 		    <b-form-checkbox-group v-model="infFlag" id="ActiveCheck">
-			    <b-form-checkbox>Uncheck if you want infinite link</b-form-checkbox>
-			</b-form-checkbox-group>
+		    
+			    <b-form-checkbox @change="onCheckLifetime">Uncheck if you want infinite link</b-form-checkbox>
 
-			<datepicker v-if="infFlag" 
+			    <datepicker v-if="infFlag" 
 				name = "lifetime" v-model="newUrl.lifetime" confirm
 				lang="en" type="datetime" format="YYYY-MM-DD HH:mm">
-			</datepicker>
+				</datepicker>
+
+			</b-form-checkbox-group>
+
 
 	    </b-form-group>
 
