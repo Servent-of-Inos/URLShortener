@@ -97,7 +97,7 @@ const App = new Vue({
 
 			axios.put(uri, this.fillUrl).then(response => {
 
-				this.getUrlList();
+				this.getUrlList(this.currentPage);
 				this.errors	  = [];
 
 				this.$toast.success({
@@ -116,7 +116,7 @@ const App = new Vue({
 
 			axios.put(url, this.fillStatisticRecord).then(response => {
 
-				this.getUrlList();
+				this.getUrlList(this.currentPage);
 				this.fillStatisticRecord = {};
 				this.errors	  = [];
 
@@ -139,7 +139,7 @@ const App = new Vue({
 
 			axios.delete(url).then(response => { 
 
-				this.getUrlList();
+				this.getUrlList(this.currentPage);
 
 				this.$toast.error({
     				title: 'Information',
@@ -168,7 +168,7 @@ const App = new Vue({
 						is_active: this.newUrl.is_active[0]
 					}
 				}).then(response => {
-					this.getUrlList();
+					this.getUrlList(this.currentPage);
 					this.newUrl = {'long_url': '', 'short_url': '', 'lifetime': '', 'is_active': false};
 					this.errors = [];
 
