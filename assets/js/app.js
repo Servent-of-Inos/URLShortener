@@ -153,11 +153,11 @@ const App = new Vue({
 
 			let url = '/add-url';
 
-			if (typeof this.newUrl.lifetime != 'undefined') {
+			// if (typeof this.newUrl.lifetime != 'undefined') {
 
-				this.newUrl.lifetime = null;
+			// 	this.newUrl.lifetime = null;
 
-			}
+			// }
 
 			axios({
 					method: 'post',
